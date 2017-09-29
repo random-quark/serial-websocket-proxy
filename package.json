@@ -1,0 +1,15 @@
+{
+  "name": "serial-websocket-proxy",
+  "version": "1.0.0",
+  "description": "A service to proxy serial data to websocket for use on client side javascript",
+  "main": "index.js",
+  "author": "Tom Chambers <tom.chambers@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^1.7.3",
+    "serialport": "^5.0.0",
+    "socket.io-client": "^2.0.3",
+    "socket.io-serial": "^0.4.0",
+    "ws": "^3.2.0"
+  }
+}
