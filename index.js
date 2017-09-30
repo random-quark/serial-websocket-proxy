@@ -19,6 +19,7 @@ SerialPort.list()
 
 const setupPort = comName => {
   let websocketOpen = false;
+  let ws;
   console.log(`Port ${comName} opening`);
 
   const parser = new Readline();
@@ -36,9 +37,10 @@ const setupPort = comName => {
     console.error('ERROR', err.message);
   });
 
-  wss.on('connection', ws => {
+  wss.on('connection', _ws => {
     console.log('New client connected');
     websocketOpen = true;
+    ws = _ws;
   });
 
   parser.on('data', data => {
