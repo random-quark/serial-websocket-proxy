@@ -2,7 +2,7 @@ const HEALTHCHECK_INTERVAL = 60000;
 
 var SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
-const parser = new Readline();
+
 const WebSocket = require('ws');
 const fetch = require('node-fetch');
 
@@ -18,7 +18,10 @@ SerialPort.list()
   });
 
 const setupPort = comName => {
+  let websocketOpen = false;
   console.log(`Port ${comName} opening`);
+
+  const parser = new Readline();
 
   var port = new SerialPort(comName, {
     baudRate: 9600,
@@ -35,11 +38,12 @@ const setupPort = comName => {
 
   wss.on('connection', ws => {
     console.log('New client connected');
+    websocketOpen = true;
+  });
 
-    parser.on('data', data => {
-      console.log('Incoming data ->', data);
-      ws.send(data, err => console.error);
-    });
+  parser.on('data', data => {
+    console.log('Incoming data ->', data);
+    websocketOpen && ws.send(data, err => console.error);
   });
 };
 
