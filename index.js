@@ -18,8 +18,6 @@ SerialPort.list()
   });
 
 const setupPort = comName => {
-  let websocketOpen = false;
-  let ws;
   console.log(`Port ${comName} opening`);
 
   const parser = new Readline();
@@ -39,13 +37,18 @@ const setupPort = comName => {
 
   wss.on('connection', _ws => {
     console.log('New client connected');
-    websocketOpen = true;
-    ws = _ws;
   });
 
   parser.on('data', data => {
-    console.log('Incoming data ->', data);
-    websocketOpen && ws.send(data, err => console.error);
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      } else {
+        console.error(
+          'A client did not get a message because readyState was false'
+        );
+      }
+    });
   });
 };
 
